@@ -4,55 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Información del Trabajador</title>
-</head>
-<body>
-    <h1>Información del Trabajador</h1>
-    <div id="infoTrabajador">
-        <p><strong>Nombre:</strong> <span id="nombreTrabajador"></span></p>
-        <p><strong>ID:</strong> <span id="idTrabajador"></span></p>
-        <p><strong>QR URL:</strong> <a id="urlQR" href="" target="_blank">Ver QR</a></p>
-    </div>
+    <script type="module">
+        // Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
-    <script>
-        // Configuración de Firebase (Reemplaza con tus datos reales)
+        // Configuración de Firebase
         const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_SENDER_ID",
-            appId: "TU_APP_ID"
+    apiKey: "AIzaSyCBur0YfQ1_pLSoDI51e99SwuIN8cLG-0E",
+    authDomain: "admin-grupo-siamdg.firebaseapp.com",
+    projectId: "admin-grupo-siamdg",
+    storageBucket: "admin-grupo-siamdg.firebasestorage.app",
+    messagingSenderId: "910032272616",
+    appId: "1:910032272616:web:179a87dc8eeae7488ddd5d",
+    measurementId: "G-HZCTDMHWK4"
         };
 
         // Inicializar Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // Obtener el ID desde la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const trabajadorID = urlParams.get('id');
+        async function obtenerDatosTrabajador() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
 
-        if (trabajadorID) {
-            // Consultar los datos del trabajador desde Firestore
-            db.collection("trabajadores").doc(trabajadorID).get().then(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById("nombreTrabajador").innerText = data.nombre;
-                    document.getElementById("idTrabajador").innerText = data.id;
-                    document.getElementById("urlQR").href = data.qr;
-                } else {
-                    alert("Trabajador no encontrado.");
-                }
-            }).catch(error => {
-                console.error("Error al obtener los datos del trabajador: ", error);
-            });
-        } else {
-            alert("ID del trabajador no encontrado.");
+            if (!id) {
+                document.getElementById("info").innerHTML = "No se proporcionó un ID.";
+                return;
+            }
+
+            const docRef = doc(db, "trabajadores", id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                let data = docSnap.data();
+                document.getElementById("info").innerHTML = `
+                    <h2>Información del Trabajador</h2>
+                    <p><strong>ID:</strong> ${id}</p>
+                    <p><strong>Nombre:</strong> ${data.Nombre}</p>
+                    <p><strong>Cargo:</strong> ${data.Cargo}</p>
+                `;
+            } else {
+                document.getElementById("info").innerHTML = "No se encontró el trabajador.";
+            }
         }
+
+        obtenerDatosTrabajador();
     </script>
+</head>
+<body>
+    <h1>Datos del Trabajador</h1>
+    <div id="info"></div>
 </body>
 </html>
