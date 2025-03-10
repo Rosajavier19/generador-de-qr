@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Trabajador</title>
+</head>
+<body>
+    <h1>Información del Trabajador</h1>
+    <div id="infoTrabajador">
+        <p><strong>Nombre:</strong> <span id="nombreTrabajador"></span></p>
+        <p><strong>ID:</strong> <span id="idTrabajador"></span></p>
+        <p><strong>QR URL:</strong> <a id="urlQR" href="" target="_blank">Ver QR</a></p>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Configuración de Firebase (Reemplaza con tus datos reales)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Obtener el ID desde la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const trabajadorID = urlParams.get('id');
+
+        if (trabajadorID) {
+            // Consultar los datos del trabajador desde Firestore
+            db.collection("trabajadores").doc(trabajadorID).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById("nombreTrabajador").innerText = data.nombre;
+                    document.getElementById("idTrabajador").innerText = data.id;
+                    document.getElementById("urlQR").href = data.qr;
+                } else {
+                    alert("Trabajador no encontrado.");
+                }
+            }).catch(error => {
+                console.error("Error al obtener los datos del trabajador: ", error);
+            });
+        } else {
+            alert("ID del trabajador no encontrado.");
+        }
+    </script>
+</body>
+</html>

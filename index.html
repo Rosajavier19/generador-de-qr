@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR para Trabajadores</title>
+</head>
+<body>
+    <h1>Generador de QR para Trabajadores</h1>
+    <input type="text" id="idTrabajador" placeholder="Ingrese ID del trabajador">
+    <button onclick="generarQR()">Generar QR</button>
+    <div id="qrcode"></div>
+
+    <!-- Librería QR Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Configuración de Firebase (Reemplaza con tus datos reales)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Función para generar el QR
+        function generarQR() {
+            let id = document.getElementById("idTrabajador").value;
+            if (!id) {
+                alert("Por favor ingresa un ID");
+                return;
+            }
+
+            // Generar la URL con el ID del trabajador
+            let url = `https://mi-sitio.com/trabajador.html?id=${id}`;
+            
+            // Limpiar cualquier QR anterior
+            document.getElementById("qrcode").innerHTML = "";
+
+            // Generar el código QR
+            new QRCode(document.getElementById("qrcode"), url);
+        }
+    </script>
+</body>
+</html>
