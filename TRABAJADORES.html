@@ -39,9 +39,17 @@
                 let data = docSnap.data();
                 document.getElementById("info").innerHTML = `
                     <h2>Información del Trabajador</h2>
+                    <img src="${data.Foto}" alt="Foto del trabajador" style="max-width:150px; border-radius:10px;">
                     <p><strong>ID:</strong> ${id}</p>
                     <p><strong>Nombre:</strong> ${data.nombre}</p>
                     <p><strong>Cargo:</strong> ${data.Cargo}</p>
+                    <p><strong>Cargo:</strong> ${data.Cargo}</p>
+                    <p><strong>Estatus:</strong> ${data.Estado}</p>
+                    <p><strong>Correo:</strong> ${data.Correo}</p>
+                    <p><strong>Fecha de Ingreso:</strong> ${data.Fechadeingreso}</p>
+                    <p><strong>Fecha de Egreso:</strong> ${data.FechadeEngreso}</p>
+                    <p><strong>Tipo de sangre:</strong> ${data.TipodeSangre}</p>
+                    <p><strong>Alergias:</strong> ${data.Alergias}</p>
                 `;
             } else {
                 document.getElementById("info").innerHTML = "No se encontró el trabajador.";
